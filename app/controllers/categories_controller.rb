@@ -10,6 +10,7 @@ class CategoriesController < ApplicationController
   # GET /categories/1
   # GET /categories/1.json
   def show
+    @price_rule = @category.get_price_rule(current_city)
     @products = @category.products.where(is_del: 0).paginate(page: params[:page], per_page: 10).order(updated_at: :desc)
   end
 
