@@ -9,7 +9,7 @@
             = link_to city.name, change_current_city_users_path(city_id: city.id), method: :put
 
 
-- current_city.categories.each_slice(2).each do |categories|
+- @categories.each_slice(2).each do |categories|
   .row 
     - categories.each do |category|
       .col-xs-6
