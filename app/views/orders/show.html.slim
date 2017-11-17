@@ -1,0 +1,13 @@
+.row
+  .col-md-12
+    .panel.panel-default
+      .panel-heading#operations
+        | 基本信息
+      .panel-body
+        table.table.table-striped
+          tr
+            td width='15%' Category
+            td width='35%' = @order.category.name
+          tr
+            td width='15%' 物流状态
+            td width='35%' = show_order_courier_status @order.courier_status

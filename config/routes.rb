@@ -12,6 +12,9 @@ Rails.application.routes.draw do
 
   resources :messages, only: [:index]
 
+  resources :orders do 
+  end
+
   get '/home/user', to: 'home#user', as: 'user_home'
 
   root to: 'categories#index'

@@ -83,6 +83,20 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["station_id"], name: "index_couriers_stations_on_station_id", using: :btree
   end
 
+  create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "category_id"
+    t.integer  "user_id"
+    t.integer  "user_address_id"
+    t.float    "total_price",     limit: 24
+    t.string   "courier_status"
+    t.integer  "voucher_status"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.index ["category_id"], name: "index_orders_on_category_id", using: :btree
+    t.index ["user_address_id"], name: "index_orders_on_user_address_id", using: :btree
+    t.index ["user_id"], name: "index_orders_on_user_id", using: :btree
+  end
+
   create_table "price_rules", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "grade"
     t.integer  "city_id"
@@ -190,6 +204,9 @@ ActiveRecord::Schema.define(version: 201711061534181) do
 
   add_foreign_key "categories_cities", "categories"
   add_foreign_key "categories_cities", "cities"
+  add_foreign_key "orders", "categories"
+  add_foreign_key "orders", "user_addresses"
+  add_foreign_key "orders", "users"
   add_foreign_key "price_rules", "categories"
   add_foreign_key "price_rules", "cities"
   add_foreign_key "prices", "products"
