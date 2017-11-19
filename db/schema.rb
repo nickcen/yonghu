@@ -179,6 +179,26 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  create_table "waybills", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "order_id"
+    t.string   "status"
+    t.string   "sender_type"
+    t.integer  "sender_id"
+    t.integer  "from_address_id"
+    t.string   "receiver_type"
+    t.integer  "receiver_id"
+    t.integer  "to_address_id"
+    t.datetime "exp_time"
+    t.datetime "actual_time"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+    t.index ["from_address_id"], name: "index_waybills_on_from_address_id", using: :btree
+    t.index ["order_id"], name: "index_waybills_on_order_id", using: :btree
+    t.index ["receiver_type", "receiver_id"], name: "index_waybills_on_receiver_type_and_receiver_id", using: :btree
+    t.index ["sender_type", "sender_id"], name: "index_waybills_on_sender_type_and_sender_id", using: :btree
+    t.index ["to_address_id"], name: "index_waybills_on_to_address_id", using: :btree
+  end
+
   create_table "workers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
