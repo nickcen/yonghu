@@ -24,7 +24,7 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-    @order = current_user.orders.create(order_params)
+    @order = current_user.orders.create(order_params.merge(city: current_city))
 
     respond_to do |format|
       if @order.save

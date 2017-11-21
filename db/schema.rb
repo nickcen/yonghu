@@ -92,7 +92,9 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.integer  "voucher_status"
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.integer  "city_id"
     t.index ["category_id"], name: "index_orders_on_category_id", using: :btree
+    t.index ["city_id"], name: "index_orders_on_city_id", using: :btree
     t.index ["user_address_id"], name: "index_orders_on_user_address_id", using: :btree
     t.index ["user_id"], name: "index_orders_on_user_id", using: :btree
   end

@@ -4,6 +4,7 @@ class Order < ApplicationRecord
   belongs_to :category
   belongs_to :user
   belongs_to :user_address
+  belongs_to :city
 
   has_many :waybills
 
