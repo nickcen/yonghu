@@ -83,6 +83,17 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["station_id"], name: "index_couriers_stations_on_station_id", using: :btree
   end
 
+  create_table "items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "amount"
+    t.float    "price",      limit: 24
+    t.integer  "product_id"
+    t.integer  "order_id"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.index ["order_id"], name: "index_items_on_order_id", using: :btree
+    t.index ["product_id"], name: "index_items_on_product_id", using: :btree
+  end
+
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "category_id"
     t.integer  "user_id"
@@ -164,6 +175,28 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["user_id"], name: "index_user_addresses_on_user_id", using: :btree
   end
 
+  create_table "user_card_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "kind",                     default: 0
+    t.float    "real_money",    limit: 24, default: 0.0
+    t.float    "fake_money",    limit: 24, default: 0.0
+    t.string   "loggable_type"
+    t.integer  "loggable_id"
+    t.integer  "user_card_id"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.index ["loggable_type", "loggable_id"], name: "index_user_card_logs_on_loggable_type_and_loggable_id", using: :btree
+    t.index ["user_card_id"], name: "index_user_card_logs_on_user_card_id", using: :btree
+  end
+
+  create_table "user_cards", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.float    "real_money", limit: 24, default: 0.0
+    t.float    "fake_money", limit: 24, default: 0.0
+    t.integer  "user_id"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.index ["user_id"], name: "index_user_cards_on_user_id", using: :btree
+  end
+
   create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -179,6 +212,16 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.datetime "updated_at",                          null: false
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  end
+
+  create_table "vouchers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "order_id"
+    t.integer  "status",                default: 0
+    t.datetime "payed_at"
+    t.float    "money",      limit: 24
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
+    t.index ["order_id"], name: "index_vouchers_on_order_id", using: :btree
   end
 
   create_table "waybills", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -226,6 +269,8 @@ ActiveRecord::Schema.define(version: 201711061534181) do
 
   add_foreign_key "categories_cities", "categories"
   add_foreign_key "categories_cities", "cities"
+  add_foreign_key "items", "orders"
+  add_foreign_key "items", "products"
   add_foreign_key "orders", "categories"
   add_foreign_key "orders", "user_addresses"
   add_foreign_key "orders", "users"
@@ -234,4 +279,6 @@ ActiveRecord::Schema.define(version: 201711061534181) do
   add_foreign_key "prices", "products"
   add_foreign_key "products", "categories"
   add_foreign_key "user_addresses", "users"
+  add_foreign_key "user_cards", "users"
+  add_foreign_key "vouchers", "orders"
 end

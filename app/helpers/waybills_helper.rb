@@ -1,4 +1,4 @@
-module WaybillHelper
+module WaybillsHelper
   def show_waybill_status(status)
     case status
     when 'new'
