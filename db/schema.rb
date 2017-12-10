@@ -55,6 +55,28 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["worker_id"], name: "index_cities_workers_on_worker_id", using: :btree
   end
 
+  create_table "coupon_lists", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.integer  "validity_type"
+    t.date     "valid_from"
+    t.date     "valid_to"
+    t.integer  "fixed_begin_term"
+    t.integer  "fixed_term"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  create_table "coupons", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "coupon_list_id"
+    t.integer  "user_id"
+    t.date     "valid_from"
+    t.date     "valid_to"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["coupon_list_id"], name: "index_coupons_on_coupon_list_id", using: :btree
+    t.index ["user_id"], name: "index_coupons_on_user_id", using: :btree
+  end
+
   create_table "couriers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -92,6 +114,16 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.datetime "updated_at",            null: false
     t.index ["order_id"], name: "index_items_on_order_id", using: :btree
     t.index ["product_id"], name: "index_items_on_product_id", using: :btree
+  end
+
+  create_table "order_promotions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "kind"
+    t.float    "discount",       limit: 24
+    t.float    "premise",        limit: 24
+    t.integer  "coupon_list_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.index ["coupon_list_id"], name: "index_order_promotions_on_coupon_list_id", using: :btree
   end
 
   create_table "orders", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
@@ -175,6 +207,13 @@ ActiveRecord::Schema.define(version: 201711061534181) do
     t.index ["user_id"], name: "index_user_addresses_on_user_id", using: :btree
   end
 
+  create_table "user_card_charge_settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.float    "min",        limit: 24, default: 0.0
+    t.float    "money_give", limit: 24, default: 0.0
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
   create_table "user_card_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "kind",                     default: 0
     t.float    "real_money",    limit: 24, default: 0.0
@@ -216,11 +255,15 @@ ActiveRecord::Schema.define(version: 201711061534181) do
 
   create_table "vouchers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "order_id"
-    t.integer  "status",                default: 0
+    t.integer  "status",                   default: 0
     t.datetime "payed_at"
-    t.float    "money",      limit: 24
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.float    "money",         limit: 24
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+    t.float    "user_card_pay", limit: 24, default: 0.0
+    t.float    "coupon_pay",    limit: 24, default: 0.0
+    t.integer  "coupon_id"
+    t.index ["coupon_id"], name: "index_vouchers_on_coupon_id", using: :btree
     t.index ["order_id"], name: "index_vouchers_on_order_id", using: :btree
   end
 
@@ -269,6 +312,8 @@ ActiveRecord::Schema.define(version: 201711061534181) do
 
   add_foreign_key "categories_cities", "categories"
   add_foreign_key "categories_cities", "cities"
+  add_foreign_key "coupons", "coupon_lists"
+  add_foreign_key "coupons", "users"
   add_foreign_key "items", "orders"
   add_foreign_key "items", "products"
   add_foreign_key "orders", "categories"

@@ -8,6 +8,12 @@ class Order < ApplicationRecord
 
   has_many :waybills
 
+  has_many :items
+
+  has_one :voucher
+
+  has_one :user_card_logs, as: :loggable
+
   workflow_column :courier_status 
 
   workflow do
@@ -34,6 +40,10 @@ class Order < ApplicationRecord
     if self.wuliu_qu_paidan?
       create_waybill
     end
+  end
+
+  def can_pay?
+    self.voucher_status == 1
   end
 
   private 

@@ -36,3 +36,22 @@
                 td = waybill.to_address.address
                 td = date_time waybill.created_at
                 td = date_time waybill.updated_at
+
+    .panel.panel-default
+      .panel-heading#operations
+        | 分拣信息
+      .panel-body
+        table.table.table-striped
+          tr
+            th 产品
+            th 数量
+            th 单价
+            th 总价
+          - @order.items.each do |item|
+            tr
+              td = item.product
+              td = item.amount
+              td = item.price
+              td = item.amount * item.price
+
+= link_to '支付', pay_voucher_path(@order.voucher), class: 'btn btn-info btn-sm' if @order.can_pay?
