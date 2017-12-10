@@ -7,6 +7,8 @@ module WaybillsHelper
       '已接单'
     when 'rejected'
       '已拒单'
+    when 'finished'
+      '已完成'
     end
   end
 end
